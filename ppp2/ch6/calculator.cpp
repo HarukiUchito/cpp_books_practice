@@ -52,6 +52,8 @@ Token Token_stream::get()
     case 'q':
     case '(':
     case ')':
+    case '{':
+    case '}':
     case '+':
     case '-':
     case '*':
@@ -86,6 +88,7 @@ double expression();
 // Primary:
 //     Number
 //     '('Expression')'
+//     '{'Expression'}'
 double primary()
 {
     Token t = ts.get();
@@ -97,6 +100,14 @@ double primary()
         t = ts.get();
         if (t.type != ')')
             throw std::runtime_error("')' expected");
+        return d;
+    }
+    case '{':
+    {
+        double d = expression();
+        t = ts.get();
+        if (t.type != '}')
+            throw std::runtime_error("'}' expected");
         return d;
     }
     case '8':
