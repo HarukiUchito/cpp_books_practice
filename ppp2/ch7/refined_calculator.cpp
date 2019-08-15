@@ -5,6 +5,16 @@
     output to cout
 
     [Grammer]
+        Calculation:
+            Statement
+            Print
+            Quit
+            Calculation Statement
+        Statement:
+            Declaration
+            Expression
+        Declaration:
+            "let" Name '=' Expression
         Expression:
             Term
             Expression '+' Term
@@ -20,10 +30,15 @@
             '-'Primary
             '+'Primary
             Primary'!'
+            Name
             Number
-        Number
+        Number:
             FloatValue'!'
             FloatValue
+        Print:
+            ';'
+        Quit:
+            'q'
 */
 
 #include <bits/stdc++.h>
@@ -32,6 +47,9 @@ using namespace std;
 constexpr char type_number = '8';
 constexpr char type_quit = 'q';
 constexpr char type_print = ';';
+constexpr char type_name = 'N';
+constexpr char type_let = 'L';
+constexpr char decl_key[] = "let";
 
 class Token
 {
@@ -39,10 +57,13 @@ public:
     char type;
     // '(', ')', '+', '-', '/', '%'
     double value;
+    std::string name;
     Token(char t)
         : type(t) {}
     Token(double v)
         : type(type_number), value(v) {}
+    Token(std::string v)
+        : type(type_name), name(v) {}
 };
 
 class Token_stream
@@ -61,6 +82,8 @@ private:
 };
 
 Token_stream ts;
+
+std::map<std::string, double> varialbes;
 
 double expression();
 
@@ -101,6 +124,10 @@ double primary()
             throw std::runtime_error("'}' expected");
         return d;
     }
+    case type_name:
+        if (varialbes.count(t.name) == 0)
+            throw std::runtime_error("no such variable");
+        return varialbes[t.name];
     case type_number:
         ts.putback(t);
         return number();
@@ -173,6 +200,37 @@ double expression()
     }
 }
 
+double declaration()
+{
+    Token t = ts.get();
+    if (t.type != type_name)
+        throw std::runtime_error("variable name expected");
+    std::string var_name = t.name;
+
+    Token t2 = ts.get();
+    if (t2.type != '=')
+        throw std::runtime_error("= missing in decralation");
+    
+    double d = expression();
+
+    if (varialbes.count(var_name))
+        throw std::runtime_error("the variable is already declared");
+    return varialbes[var_name] = d;
+}
+
+double statement()
+{
+    Token t = ts.get();
+    switch (t.type)
+    {
+    case type_let:
+        return declaration();
+    default:
+        ts.putback(t);
+        return expression();
+    }
+}
+
 void calculate()
 {
     while (cin)
@@ -184,7 +242,7 @@ void calculate()
             if (t.type == type_quit)
                 return;
             ts.putback(t);
-            std::cout << " = " << expression() << std::endl;
+            std::cout << " = " << statement() << std::endl;
         }
         catch (exception &e)
         {
@@ -196,7 +254,10 @@ void calculate()
 int main()
 try
 {
+    varialbes["pi"] = 3.1415926535;
+    varialbes["e"] = 2.7182818284;
     calculate();
+    return 0;
 }
 catch (const exception &e)
 {
@@ -241,6 +302,7 @@ Token Token_stream::get()
     case '/':
     case '%':
     case '!':
+    case '=':
         return Token(ch);
     case '.':
     case '0':
@@ -260,6 +322,16 @@ Token Token_stream::get()
         return Token{val};
     }
     default:
+        if (isalpha(ch)) {
+            string s;
+            s += ch;
+            while (cin.get(ch) and (isalpha(ch) or isdigit(ch)))
+                s += ch;
+            cin.putback(ch);
+            if (s == decl_key)
+                return Token(type_let);
+            return Token(s);
+        }
         throw std::runtime_error("Bad token!");
     }
 }
