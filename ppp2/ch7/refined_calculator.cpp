@@ -194,23 +194,19 @@ void calculate()
 }
 
 int main()
+try
 {
-    try
-    {
-        calculate();
-    }
-    catch (const exception &e)
-    {
-        std::cerr << e.what() << std::endl;
-        return 1;
-    }
-    catch (...)
-    {
-        std::cerr << "something went wrong" << std::endl;
-        return 2;
-    }
-
-    return 0;
+    calculate();
+}
+catch (const exception &e)
+{
+    std::cerr << e.what() << std::endl;
+    return 1;
+}
+catch (...)
+{
+    std::cerr << "something went wrong" << std::endl;
+    return 2;
 }
 
 void Token_stream::putback(Token t)
