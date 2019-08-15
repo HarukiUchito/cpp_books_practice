@@ -163,20 +163,25 @@ double expression()
     }
 }
 
+void calculate()
+{
+    while (cin)
+    {
+        Token t = ts.get();
+        while (t.type == type_print)
+            t = ts.get();
+        if (t.type == type_quit)
+            return;
+        ts.putback(t);
+        std::cout << " = " << expression() << std::endl;
+    }
+}
+
 int main()
 {
     try
     {
-        while (cin)
-        {
-            Token t = ts.get();
-            while (t.type == type_print)
-                t = ts.get();
-            if (t.type == type_quit)
-                return 0;
-            ts.putback(t);
-            std::cout << " = " << expression() << std::endl;
-        }
+        calculate();
     }
     catch (const exception &e)
     {
