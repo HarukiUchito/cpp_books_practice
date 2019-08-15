@@ -51,9 +51,10 @@ public:
     Token_stream() {}
 
     Token get();
-
     void putback(Token t);
-
+    
+    // ignore tokens until a token of type 't' is found
+    void ignore(char t);
 private:
     bool full{false};
     Token buffer{Token('(')};
@@ -100,13 +101,13 @@ double primary()
             throw std::runtime_error("'}' expected");
         return d;
     }
+    case type_number:
+        ts.putback(t);
+        return number();
     case '-':
         return -primary();
     case '+':
         return primary();
-    case type_number:
-        ts.putback(t);
-        return number();
     default:
         throw std::runtime_error("primary expected");
     }
@@ -175,15 +176,21 @@ double expression()
 void calculate()
 {
     while (cin)
-    {
-        Token t = ts.get();
-        while (t.type == type_print)
-            t = ts.get();
-        if (t.type == type_quit)
-            return;
-        ts.putback(t);
-        std::cout << " = " << expression() << std::endl;
-    }
+        try
+        {
+            Token t = ts.get();
+            while (t.type == type_print)
+                t = ts.get();
+            if (t.type == type_quit)
+                return;
+            ts.putback(t);
+            std::cout << " = " << expression() << std::endl;
+        }
+        catch (exception &e)
+        {
+            std::cerr << e.what() << std::endl;
+            ts.ignore(type_print);
+        }
 }
 
 int main()
@@ -259,4 +266,20 @@ Token Token_stream::get()
     default:
         throw std::runtime_error("Bad token!");
     }
+}
+
+void Token_stream::ignore(char t)
+{
+    // At first, look in the buffer
+    if (full and t == buffer.type)
+    {
+        full = false;
+        return;
+    }
+    full = false;
+
+    char ch = 0;
+    while (cin >> ch)
+        if (ch == t)
+            return;
 }
