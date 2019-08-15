@@ -155,17 +155,15 @@ int main()
 {
     try
     {
-        double val = 0;
         while (cin)
         {
             Token t = ts.get();
+            while (t.type == ';')
+                t = ts.get();
             if (t.type == 'q')
-                break;
-            if (t.type == ';')
-                std::cout << "=" << val << std::endl;
-            else
-                ts.putback(t);
-            val = expression();
+                return 0;
+            ts.putback(t);
+            std::cout << " = " << expression() << std::endl;
         }
     }
     catch (const exception &e)
