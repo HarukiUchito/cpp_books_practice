@@ -117,12 +117,15 @@ double term()
             t = ts.get();
             break;
         }
-        /* TODO add later
         case '%':
-            left %= primary();
-            t = get_token();
+        {
+            double d = primary();
+            if (d == 0)
+                throw std::runtime_error("0 division");
+            left = fmod(left, d);
+            t = ts.get();
             break;
-        */
+        }
         default:
             ts.putback(t);
             return left;
@@ -216,6 +219,7 @@ Token Token_stream::get()
     case '-':
     case '*':
     case '/':
+    case '%':
     case '!':
         return Token(ch);
     case '.':
