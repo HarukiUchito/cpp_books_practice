@@ -34,7 +34,7 @@ double expression();
 
 // [Grammer]
 // Number
-//     FloatValue!
+//     FloatValue'!'
 //     FloatValue
 double number()
 {
@@ -52,10 +52,12 @@ double number()
     return v;
 }
 // Primary:
-//     Primary!
-//     Number
 //     '('Expression')'
 //     '{'Expression'}'
+//     '-'Primary
+//     '+'Primary
+//     Primary'!'
+//     Number
 double primary()
 {
     Token t = ts.get();
@@ -77,6 +79,10 @@ double primary()
             throw std::runtime_error("'}' expected");
         return d;
     }
+    case '-':
+        return -primary();
+    case '+':
+        return primary();
     case '8':
         ts.putback(t);
         return number();
