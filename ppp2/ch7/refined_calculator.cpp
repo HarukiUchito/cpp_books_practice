@@ -1,3 +1,31 @@
+/*
+    Simple Calculator
+    
+    input from cin
+    output to cout
+
+    [Grammer]
+        Expression:
+            Term
+            Expression '+' Term
+            Expression '-' Term
+        Term:
+            Primary
+            Term '*' Primary
+            Term '/' Primary
+            Term '%' Primary
+        Primary:
+            '('Expression')'
+            '{'Expression'}'
+            '-'Primary
+            '+'Primary
+            Primary'!'
+            Number
+        Number
+            FloatValue'!'
+            FloatValue
+*/
+
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -35,10 +63,6 @@ Token_stream ts;
 
 double expression();
 
-// [Grammer]
-// Number
-//     FloatValue'!'
-//     FloatValue
 double number()
 {
     Token t = ts.get(), e = ts.get();
@@ -54,13 +78,7 @@ double number()
         ts.putback(e);
     return v;
 }
-// Primary:
-//     '('Expression')'
-//     '{'Expression'}'
-//     '-'Primary
-//     '+'Primary
-//     Primary'!'
-//     Number
+
 double primary()
 {
     Token t = ts.get();
@@ -94,11 +112,6 @@ double primary()
     }
 }
 
-// Term:
-//     Primary
-//     Term '*' Primary
-//     Term '/' Primary
-//     Term '%' Primary
 double term()
 {
     double left = primary();
@@ -136,10 +149,6 @@ double term()
     }
 }
 
-// Expression:
-//     Term
-//     Expression '+' Term
-//     Expression '-' Term
 double expression()
 {
     double left = term();
