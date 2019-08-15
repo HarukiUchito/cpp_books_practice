@@ -1,17 +1,20 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+constexpr char type_number = '8';
+constexpr char type_quit = 'q';
+constexpr char type_print = ';';
+
 class Token
 {
 public:
     char type;
-    // '8' for numbers
     // '(', ')', '+', '-', '/', '%'
     double value;
     Token(char t)
         : type(t) {}
     Token(double v)
-        : type('8'), value(v) {}
+        : type(type_number), value(v) {}
 };
 
 class Token_stream
@@ -83,7 +86,7 @@ double primary()
         return -primary();
     case '+':
         return primary();
-    case '8':
+    case type_number:
         ts.putback(t);
         return number();
     default:
@@ -167,9 +170,9 @@ int main()
         while (cin)
         {
             Token t = ts.get();
-            while (t.type == ';')
+            while (t.type == type_print)
                 t = ts.get();
-            if (t.type == 'q')
+            if (t.type == type_quit)
                 return 0;
             ts.putback(t);
             std::cout << " = " << expression() << std::endl;
@@ -209,8 +212,8 @@ Token Token_stream::get()
 
     switch (ch)
     {
-    case ';':
-    case 'q':
+    case type_print:
+    case type_quit:
     case '(':
     case ')':
     case '{':
