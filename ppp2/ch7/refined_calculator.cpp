@@ -31,6 +31,7 @@
             '+'Primary
             Primary'!'
             Name
+            Name = Expression
             Number
         Name:
             "sqrt("Expression')'
@@ -162,18 +163,21 @@ double name()
 {
     Token t = ts.get();
     std::string tname = t.name;
-    Token left = ts.get();
-    if (left.type != '(') // just an variable
-    {
-        ts.putback(left);
-        if (varialbes.count(t.name) == 0)
-            throw std::runtime_error("no such variable");
-        return varialbes[t.name];
-    }
-    else // special function
-    {
+    Token next = ts.get();
+    if (next.type == '(') // some kind of function
         return math_function(t.name);
+    if (next.type == '=') // assignment
+    {
+        double value = expression();
+        if (varialbes.count(tname) == 0)
+            throw std::runtime_error("variable is not yet defined");
+        return varialbes[tname] = value;
     }
+    // just an variable
+    ts.putback(next);
+    if (varialbes.count(tname) == 0)
+        throw std::runtime_error("no such variable");
+    return varialbes[tname];
 }
 
 double primary()
