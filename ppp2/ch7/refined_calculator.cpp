@@ -32,6 +32,9 @@
             Primary'!'
             Name
             Number
+        Name:
+            "sqrt("Expression')'
+            VariableName
         Number:
             FloatValue'!'
             FloatValue
@@ -50,6 +53,7 @@ constexpr char type_print = ';';
 constexpr char type_name = 'N';
 constexpr char type_let = 'L';
 constexpr char decl_key[] = "let";
+constexpr char func_sqrt[] = "sqrt";
 
 class Token
 {
@@ -103,6 +107,34 @@ double number()
     return v;
 }
 
+double name()
+{
+    Token t = ts.get();
+    std::string tname = t.name;
+    Token left = ts.get();
+    if (left.type != '(') // just an variable
+    {
+        ts.putback(left);
+        if (varialbes.count(t.name) == 0)
+            throw std::runtime_error("no such variable");
+        return varialbes[t.name];
+    }
+    else // special function
+    {
+        Token arg = expression();
+        Token right = ts.get();
+        if (right.type != ')')
+            throw std::runtime_error("')' expected for closing function");
+        if (t.name == func_sqrt)
+            if (arg.value < 0.0)
+                throw std::runtime_error("sqrt: negative argument");
+            else
+                return sqrt(arg.value);
+        else
+            throw std::runtime_error("called function is not implemented");
+    }
+}
+
 double primary()
 {
     Token t = ts.get();
@@ -125,9 +157,8 @@ double primary()
         return d;
     }
     case type_name:
-        if (varialbes.count(t.name) == 0)
-            throw std::runtime_error("no such variable");
-        return varialbes[t.name];
+        ts.putback(t);
+        return name();
     case type_number:
         ts.putback(t);
         return number();
@@ -330,7 +361,7 @@ Token Token_stream::get()
             cin.putback(ch);
             if (s == decl_key)
                 return Token(type_let);
-            return Token(s);
+            return Token(s); // name Token
         }
         throw std::runtime_error("Bad token!");
     }
