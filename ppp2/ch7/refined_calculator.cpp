@@ -58,6 +58,11 @@ R narrow_cast(const A &a)
     return r;
 }
 
+bool isalphaOrUnder(char c)
+{
+    return (c == '_') or isalpha(c);
+}
+
 constexpr char type_number = '8';
 constexpr char type_quit = 'q';
 constexpr char type_print = ';';
@@ -389,11 +394,11 @@ Token Token_stream::get()
         return Token{val};
     }
     default:
-        if (isalpha(ch))
+        if (isalphaOrUnder(ch))
         {
             string s;
             s += ch;
-            while (cin.get(ch) and (isalpha(ch) or isdigit(ch)))
+            while (cin.get(ch) and (isalphaOrUnder(ch) or isdigit(ch)))
                 s += ch;
             cin.putback(ch);
             if (s == decl_key)
