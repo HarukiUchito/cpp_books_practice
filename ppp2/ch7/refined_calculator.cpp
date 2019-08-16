@@ -15,6 +15,7 @@
             Expression
         Declaration:
             "let" Name '=' Expression
+            "const" Name '=' Expression
         Expression:
             Term
             Expression '+' Term
@@ -69,7 +70,9 @@ constexpr char type_quit = 'q';
 constexpr char type_print = ';';
 constexpr char type_name = 'N';
 constexpr char type_let = 'L';
+constexpr char type_const = 'C';
 constexpr char decl_key[] = "let";
+constexpr char cons_key[] = "const";
 constexpr char func_sqrt[] = "sqrt";
 constexpr char func_pow[] = "pow";
 
@@ -86,6 +89,8 @@ public:
         : type(type_number), value(v) {}
     Token(std::string v)
         : type(type_name), name(v) {}
+    Token(char t, std::string v)
+        : type(t), name(v) {}
 };
 
 class Token_stream
@@ -106,7 +111,47 @@ private:
 
 Token_stream ts;
 
-std::map<std::string, double> varialbes;
+class Variables {
+public:
+    double get_value(std::string name);
+    double change_value(std::string name, double value);
+    double store_value(std::string name, double value, std::string type);
+private:
+    std::map<std::string, double> variables;
+    std::map<std::string, double> constants;
+};
+
+Variables vs;
+
+double Variables::get_value(std::string name)
+{
+    if (variables.count(name))
+        return variables[name];
+    if (constants.count(name))
+        return constants[name];
+    throw std::runtime_error("the variable is not defined");
+}
+
+double Variables::change_value(std::string name, double value)
+{
+    if (constants.count(name))
+        throw std::runtime_error("constant value cannot be changed");
+    if (variables.count(name) == 0)
+        throw std::runtime_error("change value: the variable is not defined");
+    return variables[name] = value;
+}
+
+double Variables::store_value(std::string name, double value, std::string type)
+{
+    if (variables.count(name) or constants.count(name))
+        throw std::runtime_error("store value: the variable is already defined");
+    if (type == decl_key)
+        return variables[name] = value;
+    else if (type == cons_key)
+        return constants[name] = value;
+    else
+        throw std::runtime_error("store value: unknown type");
+}
 
 double expression();
 
@@ -169,15 +214,11 @@ double name()
     if (next.type == '=') // assignment
     {
         double value = expression();
-        if (varialbes.count(tname) == 0)
-            throw std::runtime_error("variable is not yet defined");
-        return varialbes[tname] = value;
+        return vs.change_value(tname, value);
     }
     // just an variable
     ts.putback(next);
-    if (varialbes.count(tname) == 0)
-        throw std::runtime_error("no such variable");
-    return varialbes[tname];
+    return vs.get_value(tname);
 }
 
 double primary()
@@ -276,7 +317,7 @@ double expression()
     }
 }
 
-double declaration()
+double declaration(std::string type)
 {
     Token t = ts.get();
     if (t.type != type_name)
@@ -288,10 +329,7 @@ double declaration()
         throw std::runtime_error("= missing in decralation");
 
     double d = expression();
-
-    if (varialbes.count(var_name))
-        throw std::runtime_error("the variable is already declared");
-    return varialbes[var_name] = d;
+    return vs.store_value(var_name, d, type);
 }
 
 double statement()
@@ -300,7 +338,8 @@ double statement()
     switch (t.type)
     {
     case type_let:
-        return declaration();
+    case type_const:
+        return declaration(t.name);
     default:
         ts.putback(t);
         return expression();
@@ -329,8 +368,8 @@ void calculate()
 
 int main() try
 {
-    varialbes["pi"] = 3.1415926535;
-    varialbes["e"] = 2.7182818284;
+    vs.store_value("pi", 3.1415926535, cons_key);
+    vs.store_value("e", 2.7182818284, cons_key);
     calculate();
     return 0;
 }
@@ -406,7 +445,9 @@ Token Token_stream::get()
                 s += ch;
             cin.putback(ch);
             if (s == decl_key)
-                return Token(type_let);
+                return Token(type_let, decl_key);
+            if (s == cons_key)
+                return Token(type_const, cons_key);
             return Token(s); // name Token
         }
         throw std::runtime_error("Bad token!");
