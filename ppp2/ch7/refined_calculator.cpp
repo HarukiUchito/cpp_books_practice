@@ -34,6 +34,7 @@
             Number
         Name:
             "sqrt("Expression')'
+            "pow("Expression, Expression')'
             VariableName
         Number:
             FloatValue'!'
@@ -47,6 +48,16 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+// run-time checked narrowing cast (type conversion). See ???.
+template <class R, class A>
+R narrow_cast(const A &a)
+{
+    R r = R(a);
+    if (A(r) != a)
+        throw std::runtime_error("info loss");
+    return r;
+}
+
 constexpr char type_number = '8';
 constexpr char type_quit = 'q';
 constexpr char type_print = ';';
@@ -54,6 +65,7 @@ constexpr char type_name = 'N';
 constexpr char type_let = 'L';
 constexpr char decl_key[] = "let";
 constexpr char func_sqrt[] = "sqrt";
+constexpr char func_pow[] = "pow";
 
 class Token
 {
@@ -77,9 +89,10 @@ public:
 
     Token get();
     void putback(Token t);
-    
+
     // ignore tokens until a token of type 't' is found
     void ignore(char t);
+
 private:
     bool full{false};
     Token buffer{Token('(')};
@@ -107,6 +120,39 @@ double number()
     return v;
 }
 
+double math_function(const std::string name)
+{
+    if (name == func_sqrt)
+    {
+        double arg = expression();
+        Token right = ts.get();
+        if (right.type != ')')
+            throw std::runtime_error("')' expected for closing function");
+        if (arg < 0.0)
+            throw std::runtime_error("sqrt: negative argument");
+        else
+            return sqrt(arg);
+    }
+    else if (name == func_pow)
+    {
+        double v = expression();
+        Token comma = ts.get();
+        if (comma.type != ',')
+            throw std::runtime_error("pow: ',' expected between arg1 and arg2");
+        try {
+            double i = narrow_cast<int, double>(expression());
+            Token right = ts.get();
+            return pow(v, i);
+        }
+        catch (const std::exception& e)
+        {
+            throw std::runtime_error("pow: second argument must be integer");
+        }
+    }
+    else
+        throw std::runtime_error("called function is not implemented");
+}
+
 double name()
 {
     Token t = ts.get();
@@ -121,17 +167,7 @@ double name()
     }
     else // special function
     {
-        Token arg = expression();
-        Token right = ts.get();
-        if (right.type != ')')
-            throw std::runtime_error("')' expected for closing function");
-        if (t.name == func_sqrt)
-            if (arg.value < 0.0)
-                throw std::runtime_error("sqrt: negative argument");
-            else
-                return sqrt(arg.value);
-        else
-            throw std::runtime_error("called function is not implemented");
+        return math_function(t.name);
     }
 }
 
@@ -241,7 +277,7 @@ double declaration()
     Token t2 = ts.get();
     if (t2.type != '=')
         throw std::runtime_error("= missing in decralation");
-    
+
     double d = expression();
 
     if (varialbes.count(var_name))
@@ -282,8 +318,7 @@ void calculate()
         }
 }
 
-int main()
-try
+int main() try
 {
     varialbes["pi"] = 3.1415926535;
     varialbes["e"] = 2.7182818284;
@@ -334,6 +369,7 @@ Token Token_stream::get()
     case '%':
     case '!':
     case '=':
+    case ',':
         return Token(ch);
     case '.':
     case '0':
@@ -353,7 +389,8 @@ Token Token_stream::get()
         return Token{val};
     }
     default:
-        if (isalpha(ch)) {
+        if (isalpha(ch))
+        {
             string s;
             s += ch;
             while (cin.get(ch) and (isalpha(ch) or isdigit(ch)))
