@@ -60,7 +60,7 @@ R narrow_cast(const A &a)
     return r;
 }
 
-bool isalphaOrUnder(char c)
+bool isalphaOrUnder(const char c)
 {
     return (c == '_') or isalpha(c);
 }
@@ -113,9 +113,9 @@ Token_stream ts;
 
 class Variables {
 public:
-    double get_value(std::string name);
-    double change_value(std::string name, double value);
-    double store_value(std::string name, double value, std::string type);
+    double get_value(const std::string name);
+    double change_value(const std::string name, const double value);
+    double store_value(const std::string name, const double value, const std::string type);
 private:
     std::map<std::string, double> variables;
     std::map<std::string, double> constants;
@@ -123,7 +123,7 @@ private:
 
 Variables vs;
 
-double Variables::get_value(std::string name)
+double Variables::get_value(const std::string name)
 {
     if (variables.count(name))
         return variables[name];
@@ -132,7 +132,7 @@ double Variables::get_value(std::string name)
     throw std::runtime_error("the variable is not defined");
 }
 
-double Variables::change_value(std::string name, double value)
+double Variables::change_value(const std::string name, const double value)
 {
     if (constants.count(name))
         throw std::runtime_error("constant value cannot be changed");
@@ -141,7 +141,7 @@ double Variables::change_value(std::string name, double value)
     return variables[name] = value;
 }
 
-double Variables::store_value(std::string name, double value, std::string type)
+double Variables::store_value(const std::string name, const double value, const std::string type)
 {
     if (variables.count(name) or constants.count(name))
         throw std::runtime_error("store value: the variable is already defined");
@@ -317,7 +317,7 @@ double expression()
     }
 }
 
-double declaration(std::string type)
+double declaration(const std::string type)
 {
     Token t = ts.get();
     if (t.type != type_name)
