@@ -51,8 +51,10 @@
 using namespace std;
 
 #include "Token_stream.hpp"
+#include "Variables.hpp"
 
 Token_stream ts;
+Variables vs;
 
 // run-time checked narrowing cast (type conversion). See ???.
 template <class R, class A>
@@ -62,48 +64,6 @@ R narrow_cast(const A &a)
     if (A(r) != a)
         throw std::runtime_error("info loss");
     return r;
-}
-
-class Variables {
-public:
-    double get_value(const std::string name);
-    double change_value(const std::string name, const double value);
-    double store_value(const std::string name, const double value, const std::string type);
-private:
-    std::map<std::string, double> variables;
-    std::map<std::string, double> constants;
-};
-
-Variables vs;
-
-double Variables::get_value(const std::string name)
-{
-    if (variables.count(name))
-        return variables[name];
-    if (constants.count(name))
-        return constants[name];
-    throw std::runtime_error("the variable is not defined");
-}
-
-double Variables::change_value(const std::string name, const double value)
-{
-    if (constants.count(name))
-        throw std::runtime_error("constant value cannot be changed");
-    if (variables.count(name) == 0)
-        throw std::runtime_error("change value: the variable is not defined");
-    return variables[name] = value;
-}
-
-double Variables::store_value(const std::string name, const double value, const std::string type)
-{
-    if (variables.count(name) or constants.count(name))
-        throw std::runtime_error("store value: the variable is already defined");
-    if (type == decl_key)
-        return variables[name] = value;
-    else if (type == cons_key)
-        return constants[name] = value;
-    else
-        throw std::runtime_error("store value: unknown type");
 }
 
 double expression();
