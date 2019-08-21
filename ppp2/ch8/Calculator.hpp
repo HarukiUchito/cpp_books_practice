@@ -48,9 +48,11 @@
 #include "Token_stream.hpp"
 #include "Variables.hpp"
 
+#include <istream>
+
 class Calculator {
 public:
-    Calculator();
+    Calculator(std::istream& ifs);
     void calculate();
 private:
     Token_stream ts;

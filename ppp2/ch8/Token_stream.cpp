@@ -25,7 +25,7 @@ Token Token_stream::get()
         return buffer;
     }
     char ch;
-    cin >> ch;
+    mIfs >> ch;
 
     switch (ch)
     {
@@ -56,9 +56,9 @@ Token Token_stream::get()
     case '8':
     case '9':
     {
-        cin.putback(ch);
+        mIfs.putback(ch);
         double val;
-        cin >> val;
+        mIfs >> val;
         return Token{val};
     }
     default:
@@ -66,9 +66,9 @@ Token Token_stream::get()
         {
             string s;
             s += ch;
-            while (cin.get(ch) and (isalphaOrUnder(ch) or isdigit(ch)))
+            while (mIfs.get(ch) and (isalphaOrUnder(ch) or isdigit(ch)))
                 s += ch;
-            cin.putback(ch);
+            mIfs.putback(ch);
             if (s == decl_key)
                 return Token(type_let, decl_key);
             if (s == cons_key)
@@ -90,7 +90,7 @@ void Token_stream::ignore(char t)
     full = false;
 
     char ch = 0;
-    while (cin >> ch)
+    while (mIfs >> ch)
         if (ch == t)
             return;
 }

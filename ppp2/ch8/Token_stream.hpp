@@ -5,6 +5,7 @@
 
 #include <exception>
 #include <stdexcept>
+#include <istream>
 
 class Token
 {
@@ -26,7 +27,7 @@ public:
 class Token_stream
 {
 public:
-    Token_stream() {}
+    Token_stream(std::istream& ifs) : mIfs(ifs) {}
 
     Token get();
     void putback(Token t);
@@ -35,6 +36,7 @@ public:
     void ignore(char t);
 
 private:
+    std::istream& mIfs;
     bool full{false};
     Token buffer{Token('(')};
 };

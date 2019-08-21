@@ -16,7 +16,8 @@ R narrow_cast(const A &a)
     return r;
 }
 
-Calculator::Calculator()
+Calculator::Calculator(istream& ifs)
+    : ts(Token_stream(ifs))
 {
     vs.store_value("pi", 3.1415926535, cons_key);
     vs.store_value("e", 2.7182818284, cons_key);
