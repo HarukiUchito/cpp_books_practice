@@ -50,6 +50,10 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+#include "Token_stream.hpp"
+
+Token_stream ts;
+
 // run-time checked narrowing cast (type conversion). See ???.
 template <class R, class A>
 R narrow_cast(const A &a)
@@ -59,57 +63,6 @@ R narrow_cast(const A &a)
         throw std::runtime_error("info loss");
     return r;
 }
-
-bool isalphaOrUnder(const char c)
-{
-    return (c == '_') or isalpha(c);
-}
-
-constexpr char type_number = '8';
-constexpr char type_quit = 'q';
-constexpr char type_print = ';';
-constexpr char type_name = 'N';
-constexpr char type_let = 'L';
-constexpr char type_const = 'C';
-constexpr char decl_key[] = "let";
-constexpr char cons_key[] = "const";
-constexpr char func_sqrt[] = "sqrt";
-constexpr char func_pow[] = "pow";
-
-class Token
-{
-public:
-    char type;
-    // '(', ')', '+', '-', '/', '%'
-    double value;
-    std::string name;
-    Token(char t)
-        : type(t) {}
-    Token(double v)
-        : type(type_number), value(v) {}
-    Token(std::string v)
-        : type(type_name), name(v) {}
-    Token(char t, std::string v)
-        : type(t), name(v) {}
-};
-
-class Token_stream
-{
-public:
-    Token_stream() {}
-
-    Token get();
-    void putback(Token t);
-
-    // ignore tokens until a token of type 't' is found
-    void ignore(char t);
-
-private:
-    bool full{false};
-    Token buffer{Token('(')};
-};
-
-Token_stream ts;
 
 class Variables {
 public:
@@ -382,90 +335,4 @@ catch (...)
 {
     std::cerr << "something went wrong" << std::endl;
     return 2;
-}
-
-void Token_stream::putback(Token t)
-{
-    if (full)
-        throw std::runtime_error("putbacked twice!");
-    buffer = t;
-    full = true;
-}
-
-Token Token_stream::get()
-{
-    if (full)
-    {
-        full = false;
-        return buffer;
-    }
-    char ch;
-    cin >> ch;
-
-    switch (ch)
-    {
-    case type_print:
-    case type_quit:
-    case '(':
-    case ')':
-    case '{':
-    case '}':
-    case '+':
-    case '-':
-    case '*':
-    case '/':
-    case '%':
-    case '!':
-    case '=':
-    case ',':
-        return Token(ch);
-    case '.':
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    {
-        cin.putback(ch);
-        double val;
-        cin >> val;
-        return Token{val};
-    }
-    default:
-        if (isalphaOrUnder(ch))
-        {
-            string s;
-            s += ch;
-            while (cin.get(ch) and (isalphaOrUnder(ch) or isdigit(ch)))
-                s += ch;
-            cin.putback(ch);
-            if (s == decl_key)
-                return Token(type_let, decl_key);
-            if (s == cons_key)
-                return Token(type_const, cons_key);
-            return Token(s); // name Token
-        }
-        throw std::runtime_error("Bad token!");
-    }
-}
-
-void Token_stream::ignore(char t)
-{
-    // At first, look in the buffer
-    if (full and t == buffer.type)
-    {
-        full = false;
-        return;
-    }
-    full = false;
-
-    char ch = 0;
-    while (cin >> ch)
-        if (ch == t)
-            return;
 }
