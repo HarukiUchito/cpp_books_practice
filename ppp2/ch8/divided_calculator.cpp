@@ -12,7 +12,7 @@
 
 int main() try
 {
-    Calculator cl(std::cin);
+    Calculator cl {std::cin};
     cl.calculate();
     return 0;
 }

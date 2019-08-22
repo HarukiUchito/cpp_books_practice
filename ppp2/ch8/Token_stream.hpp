@@ -14,13 +14,13 @@ public:
     // '(', ')', '+', '-', '/', '%'
     double value;
     std::string name;
-    Token(char t)
+    Token(const char t)
         : type(t) {}
-    Token(double v)
+    Token(const double v)
         : type(type_number), value(v) {}
-    Token(std::string v)
+    Token(const std::string v)
         : type(type_name), name(v) {}
-    Token(char t, std::string v)
+    Token(const char t, const std::string v)
         : type(t), name(v) {}
 };
 
@@ -33,12 +33,12 @@ public:
     void putback(Token t);
 
     // ignore tokens until a token of type 't' is found
-    void ignore(char t);
+    void ignore(const char t);
 
 private:
     std::istream& mIfs;
-    bool full{false};
-    Token buffer{Token('(')};
+    bool full {false};
+    Token buffer {Token('(')};
 };
 
 #endif

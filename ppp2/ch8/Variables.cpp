@@ -4,12 +4,12 @@
 #include <exception>
 #include <stdexcept>
 
-double Variables::get_value(const std::string name)
+double Variables::get_value(const std::string name) const
 {
     if (variables.count(name))
-        return variables[name];
+        return variables.at(name);
     if (constants.count(name))
-        return constants[name];
+        return constants.at(name);
     throw std::runtime_error("the variable is not defined");
 }
 

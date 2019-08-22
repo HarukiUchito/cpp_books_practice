@@ -1,8 +1,6 @@
 #include "Token_stream.hpp"
 
 #include <string>
-#include <iostream>
-using namespace std;
 
 bool isalphaOrUnder(const char c)
 {
@@ -64,7 +62,7 @@ Token Token_stream::get()
     default:
         if (isalphaOrUnder(ch))
         {
-            string s;
+            std::string s;
             s += ch;
             while (mIfs.get(ch) and (isalphaOrUnder(ch) or isdigit(ch)))
                 s += ch;

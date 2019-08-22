@@ -6,7 +6,7 @@
 
 class Variables {
 public:
-    double get_value(const std::string name);
+    double get_value(const std::string name) const;
     double change_value(const std::string name, const double value);
     double store_value(const std::string name, const double value, const std::string type);
 private:
