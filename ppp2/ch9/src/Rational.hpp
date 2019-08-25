@@ -1,5 +1,5 @@
-#ifndef RATIONAL_NUMBER_HPP
-#define RATIONAL_NUMBER_HPP
+#ifndef Rational_HPP
+#define Rational_HPP
 
 #include <iostream>
 
@@ -7,16 +7,16 @@
 int64_t gcd(int64_t a, int64_t b);
 int64_t lcm(int64_t a, int64_t b);
 
-class Rational_number
+class Rational
 {
 public:
-    Rational_number() {}
-    Rational_number(const int64_t numerator, const int64_t denomerator)
+    Rational() {}
+    Rational(const int64_t numerator, const int64_t denomerator)
         : mNumerator(numerator), mDenomerator(denomerator)
     {
         normalize();
     }
-    Rational_number(const Rational_number &r)
+    Rational(const Rational &r)
         : mNumerator(r.numerator()), mDenomerator(r.denomerator())
     {
         normalize();
@@ -26,9 +26,9 @@ public:
     inline int64_t numerator() const;
     inline int64_t denomerator() const;
 
-    Rational_number operator=(Rational_number &r);
-    Rational_number operator+(Rational_number &r);
-    Rational_number operator-(Rational_number &r);
+    Rational operator=(Rational &r);
+    Rational operator+(Rational &r);
+    Rational operator-(Rational &r);
 private:
     // mNumerator / mDenomerator
     int64_t mNumerator{0};
@@ -40,19 +40,19 @@ private:
     void normalize();
 };
 
-std::ostream &operator<<(std::ostream &ofs, const Rational_number &r);
+std::ostream &operator<<(std::ostream &ofs, const Rational &r);
 
-double Rational_number::to_double() const
+double Rational::to_double() const
 {
     return double(mNumerator) / double(mDenomerator);
 }
 
-int64_t Rational_number::numerator() const
+int64_t Rational::numerator() const
 {
     return mNumerator;
 }
 
-int64_t Rational_number::denomerator() const
+int64_t Rational::denomerator() const
 {
     return mDenomerator;
 }

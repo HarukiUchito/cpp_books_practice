@@ -19,4 +19,4 @@ function(add_unit_test name mylib)
     )
 endfunction()
 
-add_unit_test(test_Rational_number RationalNumber)
+add_unit_test(test_Rational RationalNumber)

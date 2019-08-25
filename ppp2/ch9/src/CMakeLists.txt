@@ -1,1 +1,1 @@
-add_library(RationalNumber STATIC Rational_number.cpp)
+add_library(RationalNumber STATIC Rational.cpp)
