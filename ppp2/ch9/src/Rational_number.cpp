@@ -1,13 +1,13 @@
 #include "Rational_number.hpp"
 
-llint gcd(llint a, llint b)
+int64_t gcd(int64_t a, int64_t b)
 {
     return b ? gcd(b, a % b) : a;
 }
 
-llint lcm(llint a, llint b)
+int64_t lcm(int64_t a, int64_t b)
 {
-    llint temp = gcd(a, b);
+    int64_t temp = gcd(a, b);
     return temp ? (a / temp * b) : 0;
 }
 
@@ -18,8 +18,8 @@ Rational_number Rational_number::operator=(Rational_number &r)
 
 Rational_number Rational_number::operator+(Rational_number &r)
 {
-    llint denom_lcm = lcm(mDenomerator, r.denomerator());
-    llint num_sum{0};
+    int64_t denom_lcm = lcm(mDenomerator, r.denomerator());
+    int64_t num_sum{0};
     num_sum += denom_lcm / mDenomerator * mNumerator;
     num_sum += denom_lcm / r.denomerator() * r.numerator();
     return Rational_number{num_sum, denom_lcm};
