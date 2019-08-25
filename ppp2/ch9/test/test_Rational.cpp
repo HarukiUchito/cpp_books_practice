@@ -52,9 +52,9 @@ TEST(RationalTest, NORMALIZATION)
 {
     Rational r1{2, 4};
     EXPECT_EQ(1, r1.numerator());
-    EXPECT_EQ(2, r1.denomerator());
+    EXPECT_EQ(2, r1.denominator());
 
     Rational r2{5, -125};
     EXPECT_EQ(-1, r2.numerator());
-    EXPECT_EQ(25, r2.denomerator());
+    EXPECT_EQ(25, r2.denominator());
 }

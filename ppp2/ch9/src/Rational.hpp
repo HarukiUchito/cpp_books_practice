@@ -12,13 +12,13 @@ class Rational
 {
 public:
     Rational() {}
-    Rational(const int64_t numerator, const int64_t denomerator)
-        : mNumerator(numerator), mDenomerator(denomerator)
+    Rational(const int64_t numerator, const int64_t denominator)
+        : mNumerator(numerator), mDenominator(denominator)
     {
         normalize();
     }
     Rational(const Rational &r)
-        : mNumerator(r.numerator()), mDenomerator(r.denomerator())
+        : mNumerator(r.numerator()), mDenominator(r.denominator())
     {
         normalize();
     }
@@ -26,7 +26,7 @@ public:
     inline double to_double() const;
     inline long double to_long_double() const;
     inline int64_t numerator() const;
-    inline int64_t denomerator() const;
+    inline int64_t denominator() const;
 
     Rational operator=(Rational &r);
     Rational operator+(Rational &r);
@@ -34,14 +34,14 @@ public:
     Rational operator*(Rational &r);
     Rational operator/(Rational &r);
 
-    
+
 private:
-    // mNumerator / mDenomerator
+    // mNumerator / mDenominator
     int64_t mNumerator{0};
-    int64_t mDenomerator{1};
+    int64_t mDenominator{1};
 
     // Reduction of fraction
-    // and if the denomerator is less than 0
+    // and if the denominator is less than 0
     // multiplies -1 to both  
     void normalize();
 };
@@ -52,12 +52,12 @@ std::ostream &operator<<(std::ostream &ofs, const Rational &r);
 
 double Rational::to_double() const
 {
-    return double(mNumerator) / double(mDenomerator);
+    return double(mNumerator) / double(mDenominator);
 }
 
 long double Rational::to_long_double() const
 {
-    return (long double)mNumerator / (long double)mDenomerator;
+    return (long double)mNumerator / (long double)mDenominator;
 }
 
 int64_t Rational::numerator() const
@@ -65,9 +65,9 @@ int64_t Rational::numerator() const
     return mNumerator;
 }
 
-int64_t Rational::denomerator() const
+int64_t Rational::denominator() const
 {
-    return mDenomerator;
+    return mDenominator;
 }
 
 #endif
