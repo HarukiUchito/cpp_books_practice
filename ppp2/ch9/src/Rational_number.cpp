@@ -25,6 +25,27 @@ Rational_number Rational_number::operator+(Rational_number &r)
     return Rational_number{num_sum, denom_lcm};
 }
 
+Rational_number Rational_number::operator-(Rational_number &r)
+{
+    int64_t denom_lcm = lcm(mDenomerator, r.denomerator());
+    int64_t num_sub{0};
+    num_sub += denom_lcm / mDenomerator * mNumerator;
+    num_sub -= denom_lcm / r.denomerator() * r.numerator();
+    return Rational_number{num_sub, denom_lcm};
+}
+
+void Rational_number::normalize()
+{
+    int64_t g = gcd(mDenomerator, mNumerator);
+    mDenomerator /= g;
+    mNumerator /= g;
+    if (mDenomerator < 0)
+    {
+        mDenomerator *= -1;
+        mNumerator *= -1;
+    }
+}
+
 std::ostream &operator<<(std::ostream &ofs, const Rational_number &r)
 {
     ofs << r.numerator() << " / " << r.denomerator();

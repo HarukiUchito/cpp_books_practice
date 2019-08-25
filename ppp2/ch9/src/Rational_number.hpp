@@ -12,9 +12,15 @@ class Rational_number
 public:
     Rational_number() {}
     Rational_number(const int64_t numerator, const int64_t denomerator)
-        : mNumerator(numerator), mDenomerator(denomerator) {}
+        : mNumerator(numerator), mDenomerator(denomerator)
+    {
+        normalize();
+    }
     Rational_number(const Rational_number &r)
-        : mNumerator(r.numerator()), mDenomerator(r.denomerator()) {}
+        : mNumerator(r.numerator()), mDenomerator(r.denomerator())
+    {
+        normalize();
+    }
 
     inline double to_double() const;
     inline int64_t numerator() const;
@@ -22,11 +28,16 @@ public:
 
     Rational_number operator=(Rational_number &r);
     Rational_number operator+(Rational_number &r);
-
+    Rational_number operator-(Rational_number &r);
 private:
     // mNumerator / mDenomerator
     int64_t mNumerator{0};
     int64_t mDenomerator{1};
+
+    // Reduction of fraction
+    // and if the denomerator is less than 0
+    // multiplies -1 to both  
+    void normalize();
 };
 
 std::ostream &operator<<(std::ostream &ofs, const Rational_number &r);
