@@ -34,6 +34,20 @@ Rational Rational::operator-(Rational &r)
     return Rational{num_sub, denom_lcm};
 }
 
+Rational Rational::operator*(Rational &r)
+{
+    int64_t n = mNumerator * r.numerator();
+    int64_t d = mDenomerator * r.denomerator();
+    return Rational{n, d};
+}
+
+Rational Rational::operator/(Rational &r)
+{
+    int64_t n = mNumerator * r.denomerator();
+    int64_t d = mDenomerator * r.numerator();
+    return Rational{n, d};
+}
+
 void Rational::normalize()
 {
     int64_t g = gcd(mDenomerator, mNumerator);

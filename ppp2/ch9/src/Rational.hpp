@@ -24,12 +24,17 @@ public:
     }
 
     inline double to_double() const;
+    inline long double to_long_double() const;
     inline int64_t numerator() const;
     inline int64_t denomerator() const;
 
     Rational operator=(Rational &r);
     Rational operator+(Rational &r);
     Rational operator-(Rational &r);
+    Rational operator*(Rational &r);
+    Rational operator/(Rational &r);
+
+    
 private:
     // mNumerator / mDenomerator
     int64_t mNumerator{0};
@@ -48,6 +53,11 @@ std::ostream &operator<<(std::ostream &ofs, const Rational &r);
 double Rational::to_double() const
 {
     return double(mNumerator) / double(mDenomerator);
+}
+
+long double Rational::to_long_double() const
+{
+    return (long double)mNumerator / (long double)mDenomerator;
 }
 
 int64_t Rational::numerator() const

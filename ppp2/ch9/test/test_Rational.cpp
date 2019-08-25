@@ -36,6 +36,18 @@ TEST(RationalTest, SUBTRACTION)
     EXPECT_DOUBLE_EQ(1.0 / 3.0, sub2.to_double());
 }
 
+TEST(RationalTest, MULTIPLICATION)
+{
+    Rational r1{3, 4}, r2{2, 7};
+    EXPECT_DOUBLE_EQ(3.0 / 14.0, (r1 * r2).to_double());
+}
+
+TEST(RationalTest, DIVISION)
+{
+    Rational r1{3, 4}, r2{2, 7};
+    EXPECT_DOUBLE_EQ(21.0 / 8.0, (r1 / r2).to_long_double());
+}
+
 TEST(RationalTest, NORMALIZATION)
 {
     Rational r1{2, 4};
