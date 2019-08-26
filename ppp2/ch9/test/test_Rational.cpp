@@ -48,6 +48,14 @@ TEST(RationalTest, DIVISION)
     EXPECT_DOUBLE_EQ(21.0 / 8.0, (r1 / r2).to_long_double());
 }
 
+TEST(RationalTest, EQUALITY)
+{
+    Rational r1{1, 2}, r2{1, 2};
+    EXPECT_EQ(true, r1 == r2);
+    r2 = Rational{2, 3};
+    EXPECT_EQ(true, r1 != r2);
+}
+
 TEST(RationalTest, NORMALIZATION)
 {
     Rational r1{2, 4};

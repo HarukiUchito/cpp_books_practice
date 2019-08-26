@@ -11,9 +11,11 @@ int64_t lcm(int64_t a, int64_t b)
     return temp ? (a / temp * b) : 0;
 }
 
-Rational Rational::operator=(Rational &r)
+Rational& Rational::operator=(const Rational& r)
 {
-    return Rational{r.numerator(), r.denominator()};
+    mNumerator = r.numerator();
+    mDenominator = r.denominator();
+    return *this;
 }
 
 Rational Rational::operator+(Rational &r)
@@ -46,6 +48,18 @@ Rational Rational::operator/(Rational &r)
     int64_t n = mNumerator * r.denominator();
     int64_t d = mDenominator * r.numerator();
     return Rational{n, d};
+}
+
+bool Rational::operator==(Rational &r)
+{
+    bool fn = mNumerator == r.numerator();
+    bool fd = mDenominator == r.denominator();
+    return fn and fd;
+}
+
+bool Rational::operator!=(Rational &r)
+{
+    return not (*this == r);
 }
 
 void Rational::normalize()

@@ -28,13 +28,14 @@ public:
     inline int64_t numerator() const;
     inline int64_t denominator() const;
 
-    Rational operator=(Rational &r);
+    Rational& operator=(const Rational& r);
     Rational operator+(Rational &r);
     Rational operator-(Rational &r);
     Rational operator*(Rational &r);
     Rational operator/(Rational &r);
 
-
+    bool operator==(Rational &r);
+    bool operator!=(Rational &r);
 private:
     // mNumerator / mDenominator
     int64_t mNumerator{0};
