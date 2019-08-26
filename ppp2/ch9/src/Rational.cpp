@@ -18,36 +18,40 @@ Rational& Rational::operator=(const Rational& r)
     return *this;
 }
 
-Rational Rational::operator+(Rational &r)
+Rational& Rational::operator+=(const Rational &r)
 {
     int64_t denom_lcm = lcm(mDenominator, r.denominator());
     int64_t num_sum{0};
     num_sum += denom_lcm / mDenominator * mNumerator;
     num_sum += denom_lcm / r.denominator() * r.numerator();
-    return Rational{num_sum, denom_lcm};
+    mNumerator = num_sum;
+    mDenominator = denom_lcm;
+    return *this;
 }
 
-Rational Rational::operator-(Rational &r)
+Rational& Rational::operator-=(const Rational &r)
 {
     int64_t denom_lcm = lcm(mDenominator, r.denominator());
     int64_t num_sub{0};
     num_sub += denom_lcm / mDenominator * mNumerator;
     num_sub -= denom_lcm / r.denominator() * r.numerator();
-    return Rational{num_sub, denom_lcm};
+    mNumerator = num_sub;
+    mDenominator = denom_lcm;
+    return *this;
 }
 
-Rational Rational::operator*(Rational &r)
+Rational& Rational::operator*=(const Rational &r)
 {
-    int64_t n = mNumerator * r.numerator();
-    int64_t d = mDenominator * r.denominator();
-    return Rational{n, d};
+    mNumerator *= r.numerator();
+    mDenominator *= r.denominator();
+    return *this;
 }
 
-Rational Rational::operator/(Rational &r)
+Rational& Rational::operator/=(const Rational &r)
 {
-    int64_t n = mNumerator * r.denominator();
-    int64_t d = mDenominator * r.numerator();
-    return Rational{n, d};
+    mNumerator *= r.denominator();
+    mDenominator *= r.numerator();
+    return *this;
 }
 
 void Rational::normalize()
@@ -73,6 +77,11 @@ bool operator!=(Rational &r1, Rational &r2)
 {
     return not (r1 == r2);
 }
+
+Rational operator+(const Rational& r1, const Rational& r2) { return Rational(r1) += r2; }
+Rational operator-(const Rational& r1, const Rational& r2) { return Rational(r1) -= r2; }
+Rational operator*(const Rational& r1, const Rational& r2) { return Rational(r1) *= r2; }
+Rational operator/(const Rational& r1, const Rational& r2) { return Rational(r1) /= r2; }
 
 std::ostream &operator<<(std::ostream &ofs, const Rational &r)
 {

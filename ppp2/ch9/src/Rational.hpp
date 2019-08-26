@@ -29,10 +29,12 @@ public:
     inline int64_t denominator() const;
 
     Rational& operator=(const Rational& r);
-    Rational operator+(Rational &r);
-    Rational operator-(Rational &r);
-    Rational operator*(Rational &r);
-    Rational operator/(Rational &r);
+
+    // compound assignment operators
+    Rational& operator+=(const Rational &r);
+    Rational& operator-=(const Rational &r);
+    Rational& operator*=(const Rational &r);
+    Rational& operator/=(const Rational &r);
 private:
     // mNumerator / mDenominator
     int64_t mNumerator{0};
@@ -46,6 +48,12 @@ private:
 
 bool operator==(Rational &r1, Rational &r2);
 bool operator!=(Rational &r1, Rational &r2);
+
+// Following operators are defined using compound assignment operators
+Rational operator+(const Rational& r1, const Rational& r2);
+Rational operator-(const Rational& r1, const Rational& r2);
+Rational operator*(const Rational& r1, const Rational& r2);
+Rational operator/(const Rational& r1, const Rational& r2);
 
 // output Rational number in following format
 // n / d (f) 
