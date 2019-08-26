@@ -93,6 +93,31 @@ Rational operator-(const Rational& r1, const Rational& r2) { return Rational(r1)
 Rational operator*(const Rational& r1, const Rational& r2) { return Rational(r1) *= r2; }
 Rational operator/(const Rational& r1, const Rational& r2) { return Rational(r1) /= r2; }
 
+bool operator<(const Rational &r1, const Rational &r2)
+{
+    int64_t d1 = r1.denominator(), d2 = r2.denominator();
+    int64_t n1 = r1.numerator(), n2 = r2.numerator();
+    int64_t denom_lcm = lcm(d1, d2);
+    int64_t nn1 = denom_lcm / d1 * n1;
+    int64_t nn2 = denom_lcm / d2 * n2;
+    return nn1 < nn2;
+}
+
+bool operator>(const Rational &r1, const Rational &r2)
+{
+    return r2 < r1;
+}
+
+bool operator<=(const Rational &r1, const Rational &r2)
+{
+    return not (r1 > r2);
+}
+
+bool operator>=(const Rational &r1, const Rational &r2)
+{
+    return not (r1 < r2);
+}
+
 std::ostream &operator<<(std::ostream &ofs, const Rational &r)
 {
     ofs << r.numerator() << " / " << r.denominator();

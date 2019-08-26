@@ -1,5 +1,8 @@
 #include <gtest/gtest.h>
 #include <iostream>
+#include <vector>
+#include <random>
+#include <algorithm>
 #include <Rational.hpp>
 
 TEST(RationalTest, INITIALIZEATION)
@@ -72,4 +75,29 @@ TEST(RationalTest, NORMALIZATION)
     Rational r2{5, -125};
     EXPECT_EQ(-1, r2.numerator());
     EXPECT_EQ(25, r2.denominator());
+}
+
+TEST(RationalTest, COMPARISON)
+{
+    Rational r1{2, 3}, r2{3, 4};
+    EXPECT_EQ(true, r1 < r2);
+
+    std::vector<Rational> rv;
+    constexpr int num = 10;
+    for (int i = 0; i < num; ++i)
+    {
+        rv.push_back(Rational{i + 1, 10});
+    }
+
+    std::mt19937 rand_mt;
+    std::shuffle(rv.begin(), rv.end(), rand_mt);
+    std::cout << "before sort" << std::endl;
+    for (auto &r : rv)
+        std::cout << r << std::endl;
+
+    std::sort(rv.begin(), rv.end());
+
+    std::cout << "after sort" << std::endl;
+    for (auto &r : rv)
+        std::cout << r << std::endl;
 }
