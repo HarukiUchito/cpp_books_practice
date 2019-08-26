@@ -93,11 +93,12 @@ TEST(RationalTest, COMPARISON)
     std::shuffle(rv.begin(), rv.end(), rand_mt);
     std::cout << "before sort" << std::endl;
     for (auto &r : rv)
-        std::cout << r << std::endl;
+        std::cout << ", " << r;
 
     std::sort(rv.begin(), rv.end());
 
-    std::cout << "after sort" << std::endl;
+    std::cout << std::endl << "after sort" << std::endl;
     for (auto &r : rv)
-        std::cout << r << std::endl;
+        std::cout << ", " << r;
+    std::cout << std::endl;
 }
