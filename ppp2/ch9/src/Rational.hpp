@@ -35,6 +35,10 @@ public:
     Rational& operator-=(const Rational &r);
     Rational& operator*=(const Rational &r);
     Rational& operator/=(const Rational &r);
+
+    // unary operators
+    Rational operator+() const;
+    Rational operator-() const;
 private:
     // mNumerator / mDenominator
     int64_t mNumerator{0};
@@ -46,8 +50,8 @@ private:
     void normalize();
 };
 
-bool operator==(Rational &r1, Rational &r2);
-bool operator!=(Rational &r1, Rational &r2);
+bool operator==(const Rational &r1, const Rational &r2);
+bool operator!=(const Rational &r1, const Rational &r2);
 
 // Following operators are defined using compound assignment operators
 Rational operator+(const Rational& r1, const Rational& r2);

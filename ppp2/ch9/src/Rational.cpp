@@ -54,6 +54,16 @@ Rational& Rational::operator/=(const Rational &r)
     return *this;
 }
 
+Rational Rational::operator+() const
+{
+    return Rational{*this};
+}
+
+Rational Rational::operator-() const
+{
+    return Rational{-mNumerator, mDenominator};
+}
+
 void Rational::normalize()
 {
     int64_t g = gcd(mDenominator, mNumerator);
@@ -66,14 +76,14 @@ void Rational::normalize()
     }
 }
 
-bool operator==(Rational &r1, Rational &r2)
+bool operator==(const Rational &r1, const Rational &r2)
 {
     bool fn = r1.numerator() == r2.numerator();
     bool fd = r1.denominator() == r2.denominator();
     return fn and fd;
 }
 
-bool operator!=(Rational &r1, Rational &r2)
+bool operator!=(const Rational &r1, const Rational &r2)
 {
     return not (r1 == r2);
 }
