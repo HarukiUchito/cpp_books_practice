@@ -50,18 +50,6 @@ Rational Rational::operator/(Rational &r)
     return Rational{n, d};
 }
 
-bool Rational::operator==(Rational &r)
-{
-    bool fn = mNumerator == r.numerator();
-    bool fd = mDenominator == r.denominator();
-    return fn and fd;
-}
-
-bool Rational::operator!=(Rational &r)
-{
-    return not (*this == r);
-}
-
 void Rational::normalize()
 {
     int64_t g = gcd(mDenominator, mNumerator);
@@ -72,6 +60,18 @@ void Rational::normalize()
         mDenominator *= -1;
         mNumerator *= -1;
     }
+}
+
+bool operator==(Rational &r1, Rational &r2)
+{
+    bool fn = r1.numerator() == r2.numerator();
+    bool fd = r1.denominator() == r2.denominator();
+    return fn and fd;
+}
+
+bool operator!=(Rational &r1, Rational &r2)
+{
+    return not (r1 == r2);
 }
 
 std::ostream &operator<<(std::ostream &ofs, const Rational &r)

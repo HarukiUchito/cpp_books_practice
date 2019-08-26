@@ -33,9 +33,6 @@ public:
     Rational operator-(Rational &r);
     Rational operator*(Rational &r);
     Rational operator/(Rational &r);
-
-    bool operator==(Rational &r);
-    bool operator!=(Rational &r);
 private:
     // mNumerator / mDenominator
     int64_t mNumerator{0};
@@ -46,6 +43,9 @@ private:
     // multiplies -1 to both  
     void normalize();
 };
+
+bool operator==(Rational &r1, Rational &r2);
+bool operator!=(Rational &r1, Rational &r2);
 
 // output Rational number in following format
 // n / d (f) 
